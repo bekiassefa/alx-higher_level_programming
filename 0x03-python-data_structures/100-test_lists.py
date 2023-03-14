@@ -18,4 +18,4 @@ l.append(3)
 l.append(4)
 lib.print_python_list_info(l)
 l.pop()
-lib.print_python_list_info(l)i
+lib.print_python_list_info(l)
