@@ -1,28 +1,14 @@
 #!/usr/bin/node
+
 const request = require('request');
-const { argv } = require('process');
+const starWarsUri = 'https://swapi-api.hbtn.io/api/films/'.concat(process.argv[2]);
 
-const BaseUrl = 'https://swapi-api.hbtn.io/api/films/';
-function MakeRequest (url) {
-  return new Promise(function (resolve, reject) {
-    request(url, (error, response, body) => {
-      if (!error && response.statusCode === 200) {
-        resolve(body);
-      } else {
-        reject(error);
-      }
+request(starWarsUri, function (_err, _res, body) {
+  const characters = JSON.parse(body).characters;
+
+  for (let i = 0; i < characters.length; ++i) {
+    request(characters[i], function (_cErr, _cRes, cBody) {
+      console.log(JSON.parse(cBody).name);
     });
-  });
-}
-
-async function main () {
-  const movie = await MakeRequest(BaseUrl + argv[2]);
-  const characters = JSON.parse(movie).characters;
-  characters.forEach(async function (element) {
-    const character = await MakeRequest(element);
-    const CharacterName = JSON.parse(character).name;
-    console.log(CharacterName);
-  });
-}
-
-main();
+  }
+});
